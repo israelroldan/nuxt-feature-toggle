@@ -73,10 +73,15 @@
           </feature-toggle>
         </section>
       </div>
-      <br>
       <hr >
-      <p>Serialized toggles (output of <code>$featureToggle.toggles</code>):</p>
+      <p>Toggles (<code>$featureToggle.toggles</code>)</p>
       <pre>{{ JSON.stringify($featureToggle.toggles, null, 2) }}</pre>
+      <hr>
+      <p>Serialized toggles as query string (<code>$featureToggle.toQueryString()</code>)</p>
+      <pre>{{ $featureToggle.toQueryString() }}</pre>
+      <hr>
+      <p>Serialized toggles as query object, to pass to the router (<code>$featureToggle.toQueryObject()</code>)</p>
+      <pre>{{ $featureToggle.toQueryObject() }}</pre>
       <hr>
     </div>
   </section>
@@ -90,31 +95,30 @@ export default {
     },
     toggleMyUniqueKey: {
       get() {
-        return this.$route.query['toggle_my-unique-key'] || this.$featureToggle.toggles['my-unique-key'] || true
+        return this.getFromQueryString('my-unique-key') || this.$featureToggle.toggles['my-unique-key'] || true
       },
       set(newValue) {
         this.$router.push({
           path: '/',
-          query: {
-            ...this.queryStrings,
-            ...{ 'toggle_my-unique-key': newValue }
-          }
+          query: this.$featureToggle.toQueryObject({ override: { 'my-unique-key': newValue }})
         })
       }
     },
     toggleBodySection: {
       get() {
-        return this.$route.query['toggle_body-section'] || this.$featureToggle.toggles['body-section'] || 'option-1'
+        return this.getFromQueryString('body-section') || this.$featureToggle.toggles['body-section'] || 'option-1'
       },
       set(newValue) {
         this.$router.push({
           path: '/',
-          query: {
-            ...this.queryStrings,
-            ...{ 'toggle_body-section': newValue }
-          }
+          query: this.$featureToggle.toQueryObject({ override: { 'body-section': newValue }})
         })
       }
+    }
+  },
+  methods: {
+    getFromQueryString (key) {
+      return this.$featureToggle.getFromQueryString(this.$route.query, key);
     }
   }
 }

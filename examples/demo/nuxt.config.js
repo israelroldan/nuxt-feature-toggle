@@ -57,7 +57,10 @@ export default {
   },
 
   featureToggle: {
-    queryString: true,
+    queryString: {
+      enabled: true,
+      mode: 'grouped'
+    },
 
     toggles: () => {
       return Promise.resolve({
