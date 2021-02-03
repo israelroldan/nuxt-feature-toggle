@@ -17,11 +17,11 @@ export default {
   },
   computed: {
     prefixValue () {
-      return this.prefix || this.$featureToggle.queryStringPrefix;
+      return this.prefix || this.$featureToggle.queryString.prefix;
     },
 
     queryString() {
-      return this.$featureToggle.queryString
+      return this.$featureToggle.queryString && this.$featureToggle.queryString.enabled
     },
 
     isQueryStringAllowed() {
